@@ -8,11 +8,13 @@ import NotFound from './components/NotFound/NotFound';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import MoviesList from './MoviesList/MoviesList';
 import MovieDetails from './MovieDetails/MovieDetails';
+import { useSelector } from 'react-redux';
 // import SearchMovies from './SearchMovies/SearchMovies';
 
 function App() {
+  const mylang = useSelector((state)=>state.lang);
   return (
-    <>
+    <div dir={mylang=="AR" ? "rtl" : "ltr"}>
       <BrowserRouter>
           <NavBar />
           <Switch>
@@ -25,7 +27,7 @@ function App() {
               <Route path="*" component={NotFound} exact />
           </Switch>
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 
