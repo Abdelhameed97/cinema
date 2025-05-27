@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Container, Navbar, Nav } from "react-bootstrap";
+import { Container, Navbar, Nav, Badge } from "react-bootstrap";
 import {
   FaFilm,
   FaTv,
@@ -13,8 +13,9 @@ import { FaLanguage } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLanguage } from "../../Redux/Action";
 
-
 function NavBar() {
+  const wishlist = useSelector((state) => state.wishlist);
+
   const mylang = useSelector((state) => state.lang);
   const dispatch = useDispatch();
   const handelLanguage = () => {
@@ -23,7 +24,9 @@ function NavBar() {
     console.log("change language");
     // languageOptions.language = "en" ? "ar" : "en";
   };
+
   const location = useLocation();
+
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
   // Get active link from URL
@@ -112,13 +115,13 @@ function NavBar() {
             <button
               className='btn btn-link me-3 p-0 text-white text-decoration-none'
               aria-label='Language'
-              onClick={()=>handelLanguage()}
+              onClick={() => handelLanguage()}
             >
-              <FaLanguage className='me-1' size={30}/>
+              <FaLanguage className='me-1' size={30} />
               <span className='d-none d-lg-inline'>{mylang}</span>
             </button>
             <button
-              className='btn btn-link me-3 p-0'
+              className='btn btn-link me-3 p-0 position-relative'
               onClick={toggleHeart}
               style={{
                 transition: "all 0.3s ease",
@@ -128,13 +131,31 @@ function NavBar() {
                 isHeartFilled ? "Remove from favorites" : "Add to favorites"
               }
             >
-              {isHeartFilled ? (
-                <FaHeart className='text-danger' size={20} />
+              {wishlist.length > 0 ? (
+                <Link
+                  to='/Wishlist'
+                  className='text-decoration-none text-white'
+                >
+                  <FaHeart className='text-danger' size={20} />
+                </Link>
               ) : (
-                <FaRegHeart className='text-white' size={20} />
+                <Link
+                  to='/Wishlist'
+                  className='text-decoration-none text-white'
+                >
+                  <FaRegHeart className='text-white' size={20} />
+                </Link>
+              )}
+              {wishlist.length > 0 && (
+                <Badge
+                  bg='danger'
+                  className='position-absolute top-0 start-100 translate-middle rounded-pill'
+                  style={{ fontSize: "0.6rem" }}
+                >
+                  {wishlist.length}
+                </Badge>
               )}
             </button>
-
             <Link
               to='/login'
               className='btn btn-outline-light me-2 d-flex align-items-center'
