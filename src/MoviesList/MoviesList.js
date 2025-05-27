@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   Button,
-  Container,
   Row,
   Col,
   Spinner,
@@ -18,7 +17,6 @@ function MoviesList() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [favorites, setFavorites] = useState(new Set());
 
   const fetchMovies = async (page = 1) => {
     try {
@@ -64,16 +62,18 @@ function MoviesList() {
     fetchMovies(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  const toggleFavorite = (movieId) => {
-    const newFavorites = new Set(favorites);
-    if (newFavorites.has(movieId)) {
-      newFavorites.delete(movieId);
-    } else {
-      newFavorites.add(movieId);
-    }
-    setFavorites(newFavorites);
-  };
+// Remove these lines from MoviesList:
+// const [favorites, setFavorites] = useState(new Set());
+// const toggleFavorite = (movieId) => {
+//   const newFavorites = new Set(favorites);
+//   if (newFavorites.has(movieId)) {
+//     newFavorites.delete(movieId);
+//   } else {
+//     newFavorites.add(movieId);
+//   }
+//   setFavorites(newFavorites);
+// };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

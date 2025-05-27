@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Container, Navbar, Nav } from "react-bootstrap";
+import { Container, Navbar, Nav, Badge } from "react-bootstrap";
 import {
   FaFilm,
   FaTv,
@@ -9,28 +9,53 @@ import {
   FaRegHeart,
 } from "react-icons/fa";
 import { useState } from "react";
+import { FaLanguage } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { changeLanguage } from "../../Redux/Action";
 
 function NavBar() {
+  const wishlist = useSelector((state) => state.wishlist);
+
+  const mylang = useSelector((state) => state.lang);
+  const dispatch = useDispatch();
+  const handelLanguage = () => {
+    // Implement language change logic here
+    dispatch(changeLanguage(mylang == "EN" ? "AR" : "EN"));
+    console.log("change language");
+    // languageOptions.language = "en" ? "ar" : "en";
+  };
+
   const location = useLocation();
+
   const [isHeartFilled, setIsHeartFilled] = useState(false);
-  
+
   // Get active link from URL
-  const activeLink = location.pathname.split('/')[1] || 'home';
+  const activeLink = location.pathname.split("/")[1] || "home";
 
   const toggleHeart = () => {
     setIsHeartFilled(!isHeartFilled);
   };
 
   const navLinks = [
-    { path: "/", icon: <FaHome className="me-1" />, label: "Home", id: "home" },
-    { path: "/movies", icon: <FaFilm className="me-1" />, label: "Movies", id: "movies" },
-    { path: "/tv-shows", icon: <FaTv className="me-1" />, label: "TV Shows", id: "tv" }
+    { path: "/", icon: <FaHome className='me-1' />, label: "Home", id: "home" },
+    {
+      path: "/movies",
+      icon: <FaFilm className='me-1' />,
+      label: "Movies",
+      id: "movies",
+    },
+    {
+      path: "/tv-shows",
+      icon: <FaTv className='me-1' />,
+      label: "TV Shows",
+      id: "tv",
+    },
   ];
 
   return (
     <Navbar
-      expand="lg"
-      className="sticky-top"
+      expand='lg'
+      className='sticky-top'
       style={{
         backgroundColor: "#1a1a1a",
         borderBottom: "1px solid rgba(255, 190, 11, 0.2)",
@@ -39,34 +64,33 @@ function NavBar() {
     >
       <Container fluid>
         <Link
-          className="navbar-brand d-flex align-items-center"
-          to="/"
+          className='navbar-brand d-flex align-items-center'
+          to='/'
           style={{
             transition: "all 0.3s ease",
             transform: activeLink === "home" ? "scale(1.05)" : "scale(1)",
             color: "#ffbe0b",
           }}
-          aria-label="CimaCode Home"
+          aria-label='CimaCode Home'
         >
           <FaFilm
-            className="me-2"
+            className='me-2'
             style={{
               animation: "pulse 2s infinite",
             }}
           />
-          <span className="fw-bold">Cima</span>
-          <span className="fw-bold text-white">Code</span>
+          <span className='fw-bold'>Cima</span>
+          <span className='fw-bold text-white'>Code</span>
         </Link>
 
-        
         <Navbar.Toggle
-          aria-controls="main-navbar"
-          className="text-white border-0"
+          aria-controls='main-navbar'
+          className='text-white border-0'
           style={{ transition: "all 0.3s ease" }}
         />
 
-        <Navbar.Collapse id="main-navbar">
-          <Nav className="me-auto">
+        <Navbar.Collapse id='main-navbar'>
+          <Nav className='me-auto'>
             {navLinks.map((link) => (
               <Nav.Item key={link.id}>
                 <Link
@@ -76,7 +100,8 @@ function NavBar() {
                   to={link.path}
                   style={{
                     transition: "all 0.3s ease",
-                    transform: activeLink === link.id ? "translateY(-2px)" : "none",
+                    transform:
+                      activeLink === link.id ? "translateY(-2px)" : "none",
                   }}
                   aria-current={activeLink === link.id ? "page" : undefined}
                 >
@@ -86,50 +111,79 @@ function NavBar() {
             ))}
           </Nav>
 
-         
-          <div className="d-flex align-items-center">
+          <div className='d-flex align-items-center'>
             <button
-              className="btn btn-link me-3 p-0"
+              className='btn btn-link me-3 p-0 text-white text-decoration-none'
+              aria-label='Language'
+              onClick={() => handelLanguage()}
+            >
+              <FaLanguage className='me-1' size={30} />
+              <span className='d-none d-lg-inline'>{mylang}</span>
+            </button>
+            <button
+              className='btn btn-link me-3 p-0 position-relative'
               onClick={toggleHeart}
               style={{
                 transition: "all 0.3s ease",
                 transform: isHeartFilled ? "scale(1.2)" : "scale(1)",
               }}
-              aria-label={isHeartFilled ? "Remove from favorites" : "Add to favorites"}
+              aria-label={
+                isHeartFilled ? "Remove from favorites" : "Add to favorites"
+              }
             >
-              {isHeartFilled ? (
-                <FaHeart className="text-danger" size={20} />
+              {wishlist.length > 0 ? (
+                <Link
+                  to='/Wishlist'
+                  className='text-decoration-none text-white'
+                >
+                  <FaHeart className='text-danger' size={20} />
+                </Link>
               ) : (
-                <FaRegHeart className="text-white" size={20} />
+                <Link
+                  to='/Wishlist'
+                  className='text-decoration-none text-white'
+                >
+                  <FaRegHeart className='text-white' size={20} />
+                </Link>
+              )}
+              {wishlist.length > 0 && (
+                <Badge
+                  bg='danger'
+                  className='position-absolute top-0 start-100 translate-middle rounded-pill'
+                  style={{ fontSize: "0.6rem" }}
+                >
+                  {wishlist.length}
+                </Badge>
               )}
             </button>
-
             <Link
-              to="/login"
-              className="btn btn-outline-light me-2 d-flex align-items-center"
+              to='/login'
+              className='btn btn-outline-light me-2 d-flex align-items-center'
               style={{
                 transition: "all 0.3s ease",
                 borderColor: "rgba(255, 255, 255, 0.2)",
                 color: "#fff",
               }}
-              aria-label="Login"
+              aria-label='Login'
             >
-              <FaUser className="me-1" /> 
-              <span className="d-none d-lg-inline">Login</span>
+              <FaUser className='me-1' />
+              <span className='d-none d-lg-inline'>Login</span>
             </Link>
             <Link
-              to="/register"
-              className="btn btn-warning d-flex align-items-center fw-bold"
+              to='/register'
+              className='btn btn-warning d-flex align-items-center fw-bold'
               style={{
                 backgroundColor: "#ffbe0b",
                 color: "#1a1a1a",
                 border: "none",
                 transition: "all 0.3s ease",
               }}
-              aria-label="Register"
+              aria-label='Register'
             >
-              <span className="d-none d-lg-inline">Register</span>
-              <span className="d-lg-none"><FaUser /></span>
+              <span className='d-none d-lg-inline'>Register</span>
+              <span className='d-lg-none'>
+                <FaUser />
+              </span>
             </Link>
           </div>
         </Navbar.Collapse>

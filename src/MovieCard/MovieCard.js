@@ -2,14 +2,22 @@ import { Link } from "react-router-dom";
 import { Card, Button, Badge } from "react-bootstrap";
 import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToWishlist, removeFromWishlist } from "../Redux/Action";
+
 
 function MovieCard({ movie }) {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const dispatch = useDispatch();
+  const wishlist = useSelector((state) => state.wishlist);
+  const isFavorite = wishlist.some((favMovie) => favMovie.id === movie.id);
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (isFavorite) {
+      dispatch(removeFromWishlist(movie.id));
+    } else {
+      dispatch(addToWishlist(movie));
+    }
   };
-
   // Handle missing poster images
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
